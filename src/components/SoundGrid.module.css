@@ -1,0 +1,11 @@
+.container {
+  width: 340px;
+  margin: 2rem auto;
+  padding: 20px;
+  background-color: var(--bg-color);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 20px;
+  row-gap: 20px;
+  justify-items: center;
+}

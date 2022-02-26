@@ -1,14 +1,17 @@
-import React from 'react';
+import SoundGrid from './components/SoundsGrid';
+import SoundContextProvider from './store/sound-context';
 
-import classes from './App.module.css';
+//import sounds from './assets/sounds/*.mp3'
+//const sounds = require('./assets/sounds/*.mp3')
 
 
 
 function App() {
+
   return (
-    <div className={classes.container}>
-      My
-    </div>
+    <SoundContextProvider>
+      <SoundGrid />
+    </SoundContextProvider>
   );
 }
 
