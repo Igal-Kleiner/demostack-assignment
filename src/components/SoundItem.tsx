@@ -19,14 +19,37 @@ const SoundItem: React.FC<{ item: LoopItem }> = props => {
     }
   }
 
+  const isPlayingSound= () => {
+    return ctx.playingSounds.find(sound => sound.id === item.id)
+  }
+
+  const getItemclass = () => {
+    const itemClass = [classes['sound-item']]
+    const playingSound = isPlayingSound()
+    if (playingSound) {
+      playingSound.isPlaying ? itemClass.push(classes.playing) : itemClass.push(classes.waiting)
+    }
+    return itemClass.join(' ')
+  }
+
+  const getIconClass = () => {
+    const iconClass = ['play', classes.play]
+    if (isPlayingSound()) {
+      iconClass.push(classes.paused)
+    }
+    return iconClass.join(' ')
+  }
+
   return (
-    <div className={classes['sound-item']} onClick={clickHandler}>
-      <button
-        className={`${classes.button} ${ctx.playingSounds.find(sound => sound.id === item.id) ? classes.paused : ''}`}
+    <div
+      className={getItemclass()}
+      onClick={clickHandler}
+    >
+      <div
+        className={getIconClass()}
       />
     </div>
   )
 }
-//[classes.button, props.item.isPlaying ? classes.paused : ''].join(', ')
 
 export default SoundItem

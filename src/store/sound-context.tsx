@@ -1,20 +1,6 @@
 import React, { useState, useEffect, useRef } from "react"
 import LoopItem from "../models/LoopItem"
-
-type PlayingSound = {
-  id: string,
-  audio: HTMLMediaElement
-}
-
-type SoundContextObj = {
-  sounds: LoopItem[]
-  playingSounds: PlayingSound[]
-  setSounds: (sounds: LoopItem[]) => void
-  addPlayingSound: (id: string) => void
-  removePlayingSound: (id: string) => void
-  stopPlaying: () => void,
-}
-
+import { PlayingSound, SoundContextObj } from '../custom-types'
 
 export const SoundContext = React.createContext<SoundContextObj>({
   sounds: [],
@@ -22,35 +8,37 @@ export const SoundContext = React.createContext<SoundContextObj>({
   setSounds: (sounds: LoopItem[]) => {},
   addPlayingSound: () => {},
   removePlayingSound: () => {},
-  stopPlaying: () => {}
+  stopPlaying: () => {},
+  play: () => {},
+  stop: () => {}
 })
 
 const SoundContextProvider: React.FC = props => {
   const [sounds, setSounds] = useState<LoopItem[]>([])
   const [playingSounds, setPlayingSounds] = useState<PlayingSound[]>([])
-  let [isPlaying, setIsPlaying] = useState<boolean>(false)
+  const [isPlaying, setIsPlaying] = useState<boolean>(false)
 
   const currentlyPlaying = useRef<string[]>([])
   const endedSoundsCounter = useRef<number>(0)
 
-  const managePlaylist = (playlist: PlayingSound[]) => {
+  const managePlaylist = () => {
     endedSoundsCounter.current = 0
     currentlyPlaying.current = []
-    for (const item of playlist) {
+    for (const item of playingSounds) {
       item.audio.play()
+      item.isPlaying = true
       currentlyPlaying.current.push(item.id)
     }
     setIsPlaying(true)
   }
 
   useEffect(() => {
-    console.log(playingSounds.length)
     if (!isPlaying && playingSounds.length) {
-      managePlaylist(playingSounds)
+      managePlaylist()
     } else if (!playingSounds.length) {
       setIsPlaying(false)
     }
-  }, [playingSounds, isPlaying])
+  }, [isPlaying])
 
   const setSoundsHandler = (sounds: LoopItem[]) => {
     setSounds(sounds)
@@ -65,7 +53,7 @@ const SoundContextProvider: React.FC = props => {
         setIsPlaying(false)
       }
     })
-    const playingSound: PlayingSound = { id: id, audio: audio }
+    const playingSound: PlayingSound = { id: id, audio: audio, isPlaying: false }
     setPlayingSounds(currentSounds => {
       return currentSounds.concat(playingSound)
     })
@@ -74,14 +62,29 @@ const SoundContextProvider: React.FC = props => {
   const removeSoundHandler = (id: string) => {
     setPlayingSounds(currentSounds => {
       const playingSound = playingSounds.find(sound => sound.id === id)
-      playingSound?.audio.pause()
+      playingSound!.audio.pause()
+      playingSound!.isPlaying = false
       currentlyPlaying.current = currentlyPlaying.current.filter(curr => curr !== id)
-      return currentSounds.filter(current => current.id !== id)
+      const filteredSounds = currentSounds.filter(current => current.id !== id)
+      if (!filteredSounds.length) {
+        setIsPlaying(false)
+      }
+      return filteredSounds
     })
   }
 
   const stopPlayingHandler = () => {
     setPlayingSounds([])
+  }
+
+  const playHandler = () => {
+    managePlaylist()
+  }
+
+  const stopHandler = () => {
+    for (const sound of playingSounds) {
+      removeSoundHandler(sound.id)
+    }
   }
 
   const contextValue: SoundContextObj = {
@@ -90,7 +93,9 @@ const SoundContextProvider: React.FC = props => {
     setSounds: setSoundsHandler,
     addPlayingSound: addPlayingSoundHandler,
     removePlayingSound: removeSoundHandler,
-    stopPlaying: stopPlayingHandler
+    stopPlaying: stopPlayingHandler,
+    play: playHandler,
+    stop: stopHandler
   }
 
   return <SoundContext.Provider value={contextValue}>{props.children}</SoundContext.Provider>

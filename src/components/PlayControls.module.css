@@ -1,0 +1,35 @@
+.controls-container {
+  width: var(--container-width);
+  margin: var(--container-margin);
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.control {
+  padding: .6em 1.6em;
+  background-color: var(--stop-color);
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 1.2em;
+  line-height: 1;
+  transition: var(--transition);
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+.control.playing {
+  background-color: var(--play-color);
+}
+.control:hover {
+  filter: brightness(var(--brighten));
+}
+.control:active {
+  filter: brightness(var(--darken));
+}
+
+.control .icon {
+  margin-right: .6em;
+}

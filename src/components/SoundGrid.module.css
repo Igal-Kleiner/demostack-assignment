@@ -1,6 +1,6 @@
 .container {
-  width: 340px;
-  margin: 2rem auto;
+  width: var(--container-width);
+  margin: var(--container-margin);
   padding: 20px;
   background-color: var(--bg-color);
   display: grid;
