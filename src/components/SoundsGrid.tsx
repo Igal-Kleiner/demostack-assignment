@@ -8,18 +8,21 @@ import classes from './SoundGrid.module.css'
 const SoundGrid: React.FC = () => {
   const ctx = useContext(SoundContext)
 
-  function importAll(req: any): LoopItem[] {
-    const sounds: LoopItem[] = []
-    for (const item of req.keys()) {
-      sounds.push(new LoopItem(item.replace('./', './assets/sounds/')))
-    }
-    return sounds
-  }
-
-  const sounds = importAll(require.context('../../public/assets/sounds', false, /\.mp3/))
-
+  // On first load, import all the .mp3 files in the assets/sounds folder
   useEffect(() => {
+    function importAll(req: any): LoopItem[] {
+      const sounds: LoopItem[] = []
+      for (const item of req.keys()) {
+        sounds.push(new LoopItem(item.replace('./', './assets/sounds/')))
+      }
+      return sounds
+    }
+
+    const sounds = importAll(require.context('../../public/assets/sounds', false, /\.mp3/))
+
+    // set the imported sounds in the state
     ctx.setSounds(sounds)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

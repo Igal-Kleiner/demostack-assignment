@@ -10,7 +10,7 @@ export type SoundContextObj = {
   sounds: LoopItem[]
   playingSounds: PlayingSound[]
   setSounds: (sounds: LoopItem[]) => void
-  addPlayingSound: (id: string) => void
+  addPlayingSound: (sound: LoopItem) => void
   removePlayingSound: (id: string) => void
   stopPlaying: () => void,
   play: () => void,

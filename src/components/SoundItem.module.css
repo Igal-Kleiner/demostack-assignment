@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: .2s all ease;
+  transition: var(--transition);
 }
 .sound-item.playing {
   background-color: var(--play-color)
@@ -35,7 +35,7 @@
 }
 
 .sound-item:hover .play {
-    border-color: transparent transparent transparent #404040;
+    border-color: transparent transparent transparent var(--black-light-color);
   }
 
 

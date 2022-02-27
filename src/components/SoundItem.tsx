@@ -15,7 +15,7 @@ const SoundItem: React.FC<{ item: LoopItem }> = props => {
     if (playingSound) {
       ctx.removePlayingSound(item.id)
     } else {
-      ctx.addPlayingSound(item.id)
+      ctx.addPlayingSound(item)
     }
   }
 
